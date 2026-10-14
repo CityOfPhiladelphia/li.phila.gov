@@ -94,7 +94,7 @@ When checking what a component accepts, read the installed package (`node_module
 
 Inside a store that holds several things, state comes in named pairs: `address` / `addressStatus`, `permits` / `permitsStatus`. No bare `status`. The action that loads everything for a property is `loadProperty`, since it keeps growing beyond "search".
 
-Imports: one line per file imported, with types inline — `import { lookupAddress, type AddressRecord } from '@/shared/ais'` — rather than a separate `import type` line for the same file. Prettier decides line breaks (`pnpm format`); nobody formats by hand.
+Imports: one line per file imported, with types inline — `import { fetchAddress, type AddressRecord } from '@/shared/ais'` — rather than a separate `import type` line for the same file. Prettier decides line breaks (`pnpm format`); nobody formats by hand.
 
 ## Pinia "setup" stores, not "option" stores (2026-10-06)
 
@@ -102,7 +102,7 @@ Stores are written as `defineStore('name', () => { refs, functions, return })` �
 
 ## AIS lookup lives in `src/shared/ais.ts`, behind its own record type (2026-10-06)
 
-`lookupAddress()` is the only code that knows AIS's field names and pipe-joined ids. It returns an `AddressRecord` in our names, with ids as lists and `null` ids as empty lists (the old app crashed on properties with no eCLIPSE id). A 404 is "not found" (`null`), anything else is an error. Calls go to the MuleSoft gateway (`api-prod.phila.gov/ais/v1`) with the app's client id in dev builds only, as vue3-atlas does; deployed origins are recognized by Anypoint. The `cache_origin` parameter is atlas's workaround for the gateway's CORS cache.
+`fetchAddress()` is the only code that knows AIS's field names and pipe-joined ids. It returns an `AddressRecord` in our names, with ids as lists and `null` ids as empty lists (the old app crashed on properties with no eCLIPSE id). A 404 is "not found" (`null`), anything else is an error. Calls go to the MuleSoft gateway (`api-prod.phila.gov/ais/v1`) with the app's client id in dev builds only, as vue3-atlas does; deployed origins are recognized by Anypoint. The `cache_origin` parameter is atlas's workaround for the gateway's CORS cache.
 
 ## No in-app Carto fallback, no `apiSources` switch (2026-10-06)
 
@@ -127,3 +127,7 @@ Pressing Back after a second search returns the URL and results to the first pro
 ## Vitest for wiring and data, not for maps or CSS (2026-09-24)
 
 jsdom has no layout and no WebGL. Tests cover component wiring (slots, imports, router), stores, and API calls. How things look is checked in the browser. Map components get no unit tests.
+
+## One verb, `fetch`, for every call to a remote service (2026-10-14)
+
+`fetchAddress`, `fetchPermits`, `fetchInvestigations`, and whatever comes next all start with `fetch`. The return type says whether to expect a list or one-record-or-null; the verb doesn't try to. (`lookupAddress` was renamed: it was meant to signal "might not find it", but a permits fetch can come back empty too, and AIS actually returns a list of matches that the function narrows to the first.)

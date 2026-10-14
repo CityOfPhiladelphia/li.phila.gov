@@ -67,10 +67,10 @@ function toAddressRecord(p: AisProperties): AddressRecord {
 }
 
 /**
- * Looks up a typed address in AIS. Returns the record, or null when AIS has no match
+ * Fetches a typed address from AIS. Returns the record, or null when AIS has no match
  * (a 404 is an answer, not a failure). Throws on any other problem.
  */
-export async function lookupAddress(query: string): Promise<AddressRecord | null> {
+export async function fetchAddress(query: string): Promise<AddressRecord | null> {
   const params = new URLSearchParams()
   if (gatewayClientId) {
     params.set('client_id', gatewayClientId)
@@ -86,6 +86,8 @@ export async function lookupAddress(query: string): Promise<AddressRecord | null
   if (!response.ok) throw new Error(`AIS search failed with status ${response.status}`)
 
   const data = (await response.json()) as AisResponse
+  // AIS can match several addresses for one search. The old app kept the first match and
+  // never offered a choice; this does the same.
   const properties = data.features[0]?.properties
   if (!properties) return null
   return toAddressRecord(properties)

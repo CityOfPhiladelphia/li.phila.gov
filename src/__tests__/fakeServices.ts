@@ -1,27 +1,71 @@
 import { vi } from 'vitest'
 import type { DatabridgeRow } from '@/shared/databridge'
-import { sampleProperties } from './fakeAis'
+import { sampleAisProperties } from './fakeAis'
 import { gatewayReply } from './fakeGateway'
 
-/** Two sample permit rows for 943 Sigel St, RAW as the gateway sends them (bare local timestamps). */
+/** Two real permits for 1234 MARKET ST, RAW as the gateway sends them (bare local timestamps). */
 export const samplePermitRows: DatabridgeRow[] = [
   {
-    objectid: 1,
-    permitnumber: 'PP-2022-004106',
-    permitdescription: 'Plumbing Permit',
-    permittype: 'PLUMBING',
-    permitissuedate: '2022-03-15T00:00:00',
-    status: 'COMPLETED',
-    address: '943 SIGEL ST',
+    objectid: 861683,
+    permitnumber: 'CP-2025-006422',
+    permitdescription: 'Commercial Building Permit',
+    permittype: 'Building',
+    permitissuedate: '2026-02-04T00:00:00',
+    status: 'Completed',
+    typeofwork: 'Addition and/or Alteration',
+    address: '1234 MARKET ST',
+    zip: '19107-3721',
+    contractorname: 'HERMAN GOLDNER CO INC',
+    opa_account_num: '883309050',
   },
   {
-    objectid: 2,
-    permitnumber: 'RP-2022-005991',
-    permitdescription: 'Residential Building Permit',
-    permittype: 'RESIDENTIAL BUILDING',
-    permitissuedate: '2022-06-15T00:00:00',
-    status: 'COMPLETED',
-    address: '943 SIGEL ST',
+    objectid: 124487,
+    permitnumber: 'EP-2026-004102',
+    permitdescription: 'Electrical Permit',
+    permittype: 'Electrical',
+    permitissuedate: '2026-09-15T00:00:00',
+    status: 'Issued',
+    typeofwork: 'Addition and/or Alteration',
+    address: '1234 MARKET ST',
+    zip: '19107-3721',
+    contractorname: 'SJ Thomas Company Inc',
+    opa_account_num: '883309050',
+  },
+]
+
+/** Two real investigations for 1234 MARKET ST, RAW as the gateway sends them. */
+export const sampleInvestigationRows: DatabridgeRow[] = [
+  {
+    objectid: 85541,
+    casenumber: 'CF-2020-020872',
+    casetype: 'NOTICE OF VIOLATION',
+    caseresponsibility: 'CLIP',
+    casepriority: 'STANDARD',
+    investigationtype: null,
+    investigationcompleted: '2020-05-29T10:24:12',
+    investigationstatus: 'FAILED',
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    opa_account_num: '883309050',
+    systemofrecord: 'ECLIPSE',
+  },
+  {
+    objectid: 64952,
+    casenumber: '722473',
+    casetype: 'NOTICE OF VIOLATION',
+    caseresponsibility: 'PROPERTY MAINTENANCE INVESTIGATOR',
+    casepriority: 'STANDARD',
+    investigationtype: null,
+    investigationcompleted: '2022-10-17T14:18:33',
+    investigationstatus: 'PASSED',
+    address: '1234 MARKET ST',
+    unit_type: 'STE',
+    unit_num: 'STE 1945',
+    zip: '19107-3704',
+    opa_account_num: '883309050',
+    systemofrecord: 'ECLIPSE',
   },
 ]
 
@@ -32,7 +76,7 @@ export const samplePermitRows: DatabridgeRow[] = [
 export function stubAisFoundAndPermits(permitRows: DatabridgeRow[] = samplePermitRows) {
   vi.stubGlobal('fetch', async (url: string) => {
     const body = url.includes('/ais/')
-      ? { features: [{ properties: sampleProperties }] }
+      ? { features: [{ properties: sampleAisProperties }] }
       : gatewayReply(permitRows)
     return { ok: true, status: 200, json: async () => body }
   })

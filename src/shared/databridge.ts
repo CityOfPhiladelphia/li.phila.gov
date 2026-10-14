@@ -9,6 +9,11 @@ const PAGE_SIZE = 999
 /** One row from a databridge table: column name → value. Dataset code turns these into its own records. */
 export type DatabridgeRow = Record<string, unknown>
 
+/** A column as text; null and undefined become "". */
+export function cellText(value: unknown): string {
+  return value == null ? '' : String(value)
+}
+
 interface DatabridgeResponse {
   data: { features: { properties: DatabridgeRow }[] }
 }

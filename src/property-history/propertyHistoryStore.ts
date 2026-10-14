@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { lookupAddress, type AddressRecord } from '@/shared/ais'
+import { fetchAddress, type AddressRecord } from '@/shared/ais'
 import { fetchPermits, type Permit } from './permits'
 
 /** The AIS lookup returns one record or nothing, so "nothing" is a state of the search. */
@@ -29,7 +29,7 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
     permits.value = []
     permitsStatus.value = 'idle'
     try {
-      const found = await lookupAddress(query)
+      const found = await fetchAddress(query)
       // A newer search may have started while we waited; let it win.
       if (query !== searchedAddress.value) return
       address.value = found

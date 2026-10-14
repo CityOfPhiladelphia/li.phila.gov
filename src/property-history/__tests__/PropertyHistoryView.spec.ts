@@ -72,23 +72,23 @@ describe('PropertyHistoryView', () => {
 
     it('list the permits, newest first, with a count', async () => {
       stubAisFoundAndPermits()
-      const wrapper = await mountAt('/property-history/search?address=943 Sigel St')
+      const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
       expect(wrapper.text()).toContain('2 Permits for this property')
       const cells = wrapper.findAll('tbody td').map((td) => td.text())
       expect(cells).toEqual([
-        'Jun 15, 2022',
-        'RP-2022-005991',
-        'Residential Building Permit',
-        'Mar 15, 2022',
-        'PP-2022-004106',
-        'Plumbing Permit',
+        'Sep 15, 2026',
+        'EP-2026-004102',
+        'Electrical Permit',
+        'Feb 4, 2026',
+        'CP-2025-006422',
+        'Commercial Building Permit',
       ])
     })
 
     it('say there are no permits when the gateway returns none', async () => {
       stubAisFoundAndPermits([])
-      const wrapper = await mountAt('/property-history/search?address=943 Sigel St')
+      const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
       expect(wrapper.text()).toContain('No Permits for this property')
       expect(wrapper.find('table').exists()).toBe(false)
@@ -96,9 +96,9 @@ describe('PropertyHistoryView', () => {
 
     it('say there is a single unpluralized permit when the gateway returns one', async () => {
       stubAisFoundAndPermits([samplePermitRows[0]!])
-      const wrapper = await mountAt('/property-history/search?address=943 Sigel St')
+      const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
-      expect(wrapper.text()).toContain('PP-2022-004106')
+      expect(wrapper.text()).toContain('CP-2025-006422')
       expect(wrapper.text()).toContain('1 Permit for this property')
       expect(wrapper.find('table').exists()).toBe(true)
     })
