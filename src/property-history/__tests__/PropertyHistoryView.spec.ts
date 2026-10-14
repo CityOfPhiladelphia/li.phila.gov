@@ -4,7 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 import router from '@/router'
 import { mountAt } from '@/__tests__/helpers'
 import { stubAis, stubAisFound } from '@/__tests__/fakeAis'
-import { stubAisFoundAndPermits } from '@/__tests__/fakeServices'
+import { stubAisFoundAndPermits, samplePermitRows } from '@/__tests__/fakeServices'
 
 const searchInput = 'input[placeholder="Search an address..."]'
 
@@ -92,6 +92,15 @@ describe('PropertyHistoryView', () => {
       await flushPromises()
       expect(wrapper.text()).toContain('No Permits for this property')
       expect(wrapper.find('table').exists()).toBe(false)
+    })
+
+    it('say there is a single unpluralized permit when the gateway returns one', async () => {
+      stubAisFoundAndPermits([samplePermitRows[0]!])
+      const wrapper = await mountAt('/property-history/search?address=943 Sigel St')
+      await flushPromises()
+      expect(wrapper.text()).toContain('PP-2022-004106')
+      expect(wrapper.text()).toContain('1 Permit for this property')
+      expect(wrapper.find('table').exists()).toBe(true)
     })
   })
 })

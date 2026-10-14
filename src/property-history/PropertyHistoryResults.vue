@@ -3,6 +3,7 @@ import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePropertyHistoryStore } from './propertyHistoryStore'
 import { formatDate } from '@/shared/formatDate'
+import { countOf } from '@/shared/countOf'
 
 const route = useRoute()
 const propertyHistoryStore = usePropertyHistoryStore()
@@ -10,7 +11,7 @@ const propertyHistoryStore = usePropertyHistoryStore()
 // "2 Permits for this property" / "No Permits for this property", as the old app said it.
 const permitsHeading = computed(() => {
   const count = propertyHistoryStore.permits.length
-  return count === 0 ? 'No Permits for this property' : `${count} Permits for this property`
+  return `${countOf(count, 'Permit', 'Permits')} for this property`
 })
 
 // Look up the address in the URL now, and again whenever the URL's address changes.
