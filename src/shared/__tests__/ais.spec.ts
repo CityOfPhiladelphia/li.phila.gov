@@ -35,6 +35,20 @@ describe('lookupAddress', () => {
     expect(record?.bins).toEqual([])
   })
 
+  it('shows 2 owners correctly', async () => {
+    stubAis(200, {
+      features: [{ properties: { ...sampleProperties, opa_owners: ['A', 'B'] } }],
+    })
+    expect((await lookupAddress('x'))?.owners).toBe('A, B')
+  })
+
+  it('shows no owners when opa_owners is null', async () => {
+    stubAis(200, {
+      features: [{ properties: { ...sampleProperties, opa_owners: null } }],
+    })
+    expect((await lookupAddress('x'))?.owners).toBe('')
+  })
+
   it('returns null when AIS has no match', async () => {
     stubAis(404)
     expect(await lookupAddress('asdfqwerty')).toBeNull()

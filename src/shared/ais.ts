@@ -24,7 +24,7 @@ export interface AddressRecord {
 }
 
 /** The fields we read from one AIS feature's properties. AIS has ~100 more. */
-interface AisProperties {
+export interface AisProperties {
   street_address: string
   opa_address: string
   opa_account_num: string
@@ -33,7 +33,7 @@ interface AisProperties {
   eclipse_location_id: string | null
   bin: string | null
   li_district: string
-  opa_owners: string
+  opa_owners: string[] | null
   unit_type: string
   unit_num: string
   zip_code: string
@@ -59,7 +59,7 @@ function toAddressRecord(p: AisProperties): AddressRecord {
     eclipseLocationIds: splitIds(p.eclipse_location_id),
     bins: splitIds(p.bin),
     liDistrict: p.li_district,
-    owners: p.opa_owners,
+    owners: (p.opa_owners ?? []).join(', '),
     unitType: p.unit_type,
     unitNumber: p.unit_num,
     zipCode: p.zip_code,

@@ -120,6 +120,10 @@ databridge sends timestamps as Philadelphia clock readings (bare, or with a fals
 
 `src/property-history/permits.ts`: `propertyRecordsWhere(address)` is the WHERE clause that picks a property's rows in the permits-style tables — HANSEN rows by address, L&I address key, or OPA account; eCLIPSE rows by eCLIPSE location id, parcel, or OPA account — copied from vue3-atlas, where the two arms were proven equal to the old app's UNION. Apostrophes are doubled (the old app's clause broke on O'NEILL ST); an empty id list becomes `IN ('')` rather than invalid `IN ()`. `fetchPermits` returns `Permit` records in our names with the ~12 fields the detail page will want, newest first. The page shows three columns, as the old app did.
 
+## The search box keeps the user's text on Back/Forward (2026-10-14)
+
+Pressing Back after a second search returns the URL and results to the first property, but the box still shows the second address. That's deliberate: the box belongs to the user, and the breadcrumb and the Address line already say which property is showing, so there's no mismatch. The box is filled from the URL only once, when the page opens (so shared and reloaded links work).
+
 ## Vitest for wiring and data, not for maps or CSS (2026-09-24)
 
 jsdom has no layout and no WebGL. Tests cover component wiring (slots, imports, router), stores, and API calls. How things look is checked in the browser. Map components get no unit tests.
