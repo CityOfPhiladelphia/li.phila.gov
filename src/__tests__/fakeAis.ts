@@ -44,7 +44,7 @@ export const sampleAddressRecord: AddressRecord = {
   zipCode: '19107',
 }
 
-/** Pretend AIS answered with this status and body. Undo with vi.unstubAllGlobals(). */
+/** Pretends AIS answered with this status and body. Undo with vi.unstubAllGlobals(). */
 export function stubAis(status: number, body?: unknown) {
   vi.stubGlobal('fetch', async () => ({
     ok: status >= 200 && status < 300,
@@ -53,7 +53,7 @@ export function stubAis(status: number, body?: unknown) {
   }))
 }
 
-/** Pretend AIS found the sample address. */
+/** Pretends AIS found the sample address. */
 export function stubAisFound() {
   stubAis(200, { features: [{ properties: sampleAisProperties }] })
 }

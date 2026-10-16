@@ -9,7 +9,7 @@ const PAGE_SIZE = 999
 /** One row from a databridge table: column name → value. Dataset code turns these into its own records. */
 export type DatabridgeRow = Record<string, unknown>
 
-/** A column as text; null and undefined become "". */
+/** Returns a column as text; null and undefined become "". */
 export function cellText(value: unknown): string {
   return value == null ? '' : String(value)
 }
@@ -39,8 +39,8 @@ function philadelphiaClockToUtc(clock: string): string {
 }
 
 /**
- * A copy of the row with every timestamp-looking string relabeled from Philadelphia clock
- * time to real UTC. The row passed in is left untouched.
+ * Returns a copy of the row with every timestamp-looking string relabeled from Philadelphia
+ * clock time to real UTC. The row passed in is left untouched.
  */
 export function normalizeTimestamps(row: DatabridgeRow): DatabridgeRow {
   const normalized: DatabridgeRow = { ...row }

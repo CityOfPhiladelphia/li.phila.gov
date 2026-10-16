@@ -2,8 +2,8 @@ import type { AddressRecord } from '@/shared/ais'
 import { quote, quoteList } from '@/shared/sql'
 
 /**
- * The WHERE clause that picks a property's rows in the permits-style tables (permits,
- * violations, investigations, appeals share these columns). L&I has two systems of record:
+ * Returns the WHERE clause that picks a property's rows in the permits-style tables
+ * (permits, violations, investigations, appeals share these columns). L&I has two systems of record:
  * HANSEN rows match the address, the L&I address keys, or the OPA account; eCLIPSE rows
  * match the eCLIPSE location ids, the parcel, or the OPA account. Copied from vue3-atlas,
  * where the two arms were proven to return the same rows as the old app's UNION.

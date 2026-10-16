@@ -13,7 +13,7 @@ export function stubViewport(isMobile: boolean) {
   }))
 }
 
-/** Go to a URL, then mount the whole app showing that page, with a fresh Pinia. */
+/** Goes to a URL, then mounts the whole app showing that page, with a fresh Pinia. */
 export async function mountAt(path: string, isMobile = false) {
   stubViewport(isMobile)
   await router.push(path)

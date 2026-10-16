@@ -43,7 +43,7 @@ interface AisResponse {
   features: { properties: AisProperties }[]
 }
 
-/** AIS joins multiple ids with "|". Null or empty becomes an empty list. */
+/** Splits AIS's "|"-joined ids into a list. Null or empty becomes an empty list. */
 function splitIds(value: string | null): string[] {
   if (!value) return []
   return value.split('|').filter((id) => id !== '')

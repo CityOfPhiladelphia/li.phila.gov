@@ -52,7 +52,7 @@ function toPermit(row: DatabridgeRow): Permit {
   }
 }
 
-/** Every permit for the property, newest first. */
+/** Returns every permit for the property, newest first. */
 export async function fetchPermits(address: AddressRecord): Promise<Permit[]> {
   const rows = await fetchAllRows({ table: 'permits', where: propertyRecordsWhere(address) })
   return rows.map(toPermit).sort((a, b) => b.issuedDate.localeCompare(a.issuedDate))

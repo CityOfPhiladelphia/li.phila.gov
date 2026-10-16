@@ -3,7 +3,7 @@ export function quote(value: string): string {
   return `'${value.replace(/'/g, "''")}'`
 }
 
-/** A quoted, comma-separated list for IN (…). An empty list becomes IN ('') so it matches nothing. */
+/** Returns a quoted, comma-separated list for IN (…). An empty list becomes IN ('') so it matches nothing. */
 export function quoteList(values: string[]): string {
   if (values.length === 0) return "''"
   return values.map(quote).join(', ')

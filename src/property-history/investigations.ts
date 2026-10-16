@@ -38,7 +38,7 @@ function toInvestigation(row: DatabridgeRow): Investigation {
   }
 }
 
-/** Every investigation for the property, newest first. */
+/** Returns every investigation for the property, newest first. */
 export async function fetchInvestigations(address: AddressRecord): Promise<Investigation[]> {
   const rows = await fetchAllRows({
     table: 'case_investigations',

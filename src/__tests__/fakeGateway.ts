@@ -10,7 +10,7 @@ export function gatewayReply(rows: DatabridgeRow[]) {
 }
 
 /**
- * Pretend the gateway answers each request in turn with these pages of rows.
+ * Pretends the gateway answers each request in turn with these pages of rows.
  * Returns the list of URLs requested, filled in as the fake is called.
  */
 export function stubGatewayPages(pages: Page[]) {

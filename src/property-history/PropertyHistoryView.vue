@@ -8,8 +8,8 @@ const route = useRoute()
 const router = useRouter()
 
 // Start with the address from the URL, so a shared or reloaded link fills the box.
-const addressInUrl = route.query.address
-const address = ref(typeof addressInUrl === 'string' ? addressInUrl : '')
+const addressOnOpen = route.query.address
+const address = ref(typeof addressOnOpen === 'string' ? addressOnOpen : '')
 
 function search() {
   const typed = address.value.trim()

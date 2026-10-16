@@ -70,7 +70,7 @@ export const sampleInvestigationRows: DatabridgeRow[] = [
 ]
 
 /**
- * Pretend both services answer: AIS finds the sample address, and the gateway returns
+ * Pretends both services answer: AIS finds the sample address, and the gateway returns
  * these permit rows. Routes by URL, since both go through fetch.
  */
 export function stubAisFoundAndPermits(permitRows: DatabridgeRow[] = samplePermitRows) {
