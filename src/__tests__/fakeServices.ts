@@ -38,6 +38,7 @@ export const sampleInvestigationRows: DatabridgeRow[] = [
   {
     objectid: 85541,
     casenumber: 'CF-2020-020872',
+    investigationprocessid: 236599620,
     casetype: 'NOTICE OF VIOLATION',
     caseresponsibility: 'CLIP',
     casepriority: 'STANDARD',
@@ -54,6 +55,7 @@ export const sampleInvestigationRows: DatabridgeRow[] = [
   {
     objectid: 64952,
     casenumber: '722473',
+    investigationprocessid: 212381307,
     casetype: 'NOTICE OF VIOLATION',
     caseresponsibility: 'PROPERTY MAINTENANCE INVESTIGATOR',
     casepriority: 'STANDARD',

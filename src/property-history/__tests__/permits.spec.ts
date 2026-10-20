@@ -15,7 +15,6 @@ describe('fetchPermits', () => {
     const permits = await fetchPermits(sampleAddressRecord)
     expect(permits.map((p) => p.permitNumber)).toEqual(['EP-2026-004102', 'CP-2025-006422'])
     expect(permits[0]).toMatchObject({
-      id: 124487,
       description: 'Electrical Permit',
       issuedDate: '2026-09-15T04:00:00Z',
       status: 'Issued',

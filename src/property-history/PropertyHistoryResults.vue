@@ -73,7 +73,7 @@ watch(
             </tr>
           </thead>
           <tbody>
-            <tr v-for="permit in propertyHistoryStore.permits" :key="permit.id">
+            <tr v-for="permit in propertyHistoryStore.permits" :key="permit.permitNumber">
               <td>{{ formatDate(permit.issuedDate) }}</td>
               <td>{{ permit.permitNumber }}</td>
               <td>{{ permit.description }}</td>

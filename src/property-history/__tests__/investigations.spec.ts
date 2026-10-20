@@ -15,7 +15,7 @@ describe('fetchInvestigations', () => {
     const investigations = await fetchInvestigations(sampleAddressRecord)
     expect(investigations.map((i) => i.caseNumber)).toEqual(['722473', 'CF-2020-020872'])
     expect(investigations[0]).toMatchObject({
-      id: 64952,
+      processId: '212381307',
       caseNumber: '722473',
       caseType: 'NOTICE OF VIOLATION',
       caseResponsibility: 'PROPERTY MAINTENANCE INVESTIGATOR',
@@ -31,10 +31,10 @@ describe('fetchInvestigations', () => {
       const address = await fetchAddress('1234 Market St')
       expect(address).not.toBeNull()
       const investigations = await fetchInvestigations(address!)
-      // Case numbers repeat (one case can have several investigations), so find rows by id.
-      const passed = investigations.find((i) => i.id === 64952)
+      // Case numbers repeat (one case can have several investigations), so find by process id.
+      const passed = investigations.find((i) => i.processId === '212381307')
       expect(passed?.completed).toBe('2022-10-17T18:18:33Z')
-      const failed = investigations.find((i) => i.id === 85541)
+      const failed = investigations.find((i) => i.processId === '236599620')
       expect(failed?.completed).toBe('2020-05-29T14:24:12Z')
     },
   )

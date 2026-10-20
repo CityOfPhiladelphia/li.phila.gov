@@ -4,7 +4,6 @@ import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
 /** One permit, in our names. The table shows three fields; the detail page will use the rest. */
 export interface Permit {
-  id: number
   permitNumber: string
   description: string
   type: string
@@ -35,7 +34,6 @@ function toPermit(row: DatabridgeRow): Permit {
     .join(', ')
 
   return {
-    id: Number(row.objectid),
     permitNumber: cellText(row.permitnumber),
     description: cellText(row.permitdescription),
     type: cellText(row.permittype),

@@ -29,7 +29,7 @@ describe('fetchViolationCases', () => {
     const newer = cases[0]!
     expect(newer.violations).toHaveLength(1)
     expect(newer.violations[0]).toMatchObject({
-      id: 494400,
+      violationNumber: 'VI-2024-080555',
       code: 'PM15-302.4',
       codeTitle: 'EXTERIOR AREA WEEDS',
       date: '2024-09-24T04:00:00Z',

@@ -4,7 +4,8 @@ import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
 /** One investigation, in our names. */
 export interface Investigation {
-  id: number
+  /** L&I's id for this investigation. A case can have several, so caseNumber alone doesn't identify one. */
+  processId: string
   caseNumber: string
   caseType: string
   caseResponsibility: string
@@ -22,7 +23,7 @@ export interface Investigation {
 
 function toInvestigation(row: DatabridgeRow): Investigation {
   return {
-    id: Number(row.objectid),
+    processId: cellText(row.investigationprocessid),
     caseNumber: cellText(row.casenumber),
     caseType: cellText(row.casetype),
     caseResponsibility: cellText(row.caseresponsibility),

@@ -4,7 +4,6 @@ import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
 /** One violation, in our names. The gateway sends one row per violation. */
 export interface Violation {
-  id: number
   violationNumber: string
   code: string
   codeTitle: string
@@ -41,7 +40,6 @@ export interface ViolationCase {
 
 function toViolation(row: DatabridgeRow): Violation {
   return {
-    id: Number(row.objectid),
     violationNumber: cellText(row.violationnumber),
     code: cellText(row.violationcode),
     codeTitle: cellText(row.violationcodetitle),
