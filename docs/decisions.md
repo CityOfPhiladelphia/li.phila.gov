@@ -131,3 +131,7 @@ jsdom has no layout and no WebGL. Tests cover component wiring (slots, imports, 
 ## One verb, `fetch`, for every call to a remote service (2026-10-14)
 
 `fetchAddress`, `fetchPermits`, `fetchInvestigations`, and whatever comes next all start with `fetch`. The return type says whether to expect a list or one-record-or-null; the verb doesn't try to. (`lookupAddress` was renamed: it was meant to signal "might not find it", but a permits fetch can come back empty too, and AIS actually returns a list of matches that the function narrows to the first.)
+
+## "Address" and "property" mean different things (2026-10-20)
+
+An **address** is what a lookup service resolves the typed words to: the AIS reply for "1234 Market", with its official street address and the ids (OPA account, parcel, L&I keys, eCLIPSE location ids, BINs) that other datasets are keyed on. A **property** is that address plus everything gathered about it: permits, violations, investigations, and so on. So `AddressRecord` and the store's `address` ref hold the AIS result; `loadProperty` and `usePropertyHistoryStore` are about the whole gathered thing; and a function that takes the AIS record to go find a property's records takes an `addressRecord`, not a `property`. The same split applies to other City data: a parcel layer resolves an address too, and it is still an address until records are hung on it. (The old app and vue3-atlas use the two words loosely; this app doesn't.)

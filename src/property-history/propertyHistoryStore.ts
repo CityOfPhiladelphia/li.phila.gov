@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { fetchAddress, type AddressRecord } from '@/shared/ais'
 import { fetchPermits, type Permit } from './permits'
 import { fetchInvestigations, type Investigation } from './investigations'
+import { fetchViolationCases, type ViolationCase } from './violations'
 
 /** The AIS lookup returns one record or nothing, so "nothing" is a state of the search. */
 export type AddressSearchStatus = 'idle' | 'loading' | 'found' | 'not-found' | 'error'
@@ -25,55 +26,78 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
   const investigations = ref<Investigation[]>([])
   const investigationsStatus = ref<LoadStatus>('idle')
 
+  const violationCases = ref<ViolationCase[]>([])
+  const violationCasesStatus = ref<LoadStatus>('idle')
+
   /** Looks up the typed address, then loads everything the app shows for that property. */
-  async function loadProperty(query: string) {
-    searchedAddress.value = query
+  async function loadProperty(typedAddress: string) {
+    searchedAddress.value = typedAddress
     addressStatus.value = 'loading'
     address.value = null
     permits.value = []
     permitsStatus.value = 'idle'
     investigations.value = []
     investigationsStatus.value = 'idle'
+    violationCases.value = []
+    violationCasesStatus.value = 'idle'
+
     try {
-      const found = await fetchAddress(query)
+      const found = await fetchAddress(typedAddress)
       // A newer search may have started while we waited; let it win.
-      if (query !== searchedAddress.value) return
+      if (typedAddress !== searchedAddress.value) return
       address.value = found
       addressStatus.value = found ? 'found' : 'not-found'
-      if (found) await loadAllDatasets(found, query)
+      if (found) await loadAllDatasets(found, typedAddress)
     } catch {
-      if (query !== searchedAddress.value) return
+      if (typedAddress !== searchedAddress.value) return
       addressStatus.value = 'error'
     }
   }
 
-  async function loadAllDatasets(found: AddressRecord, query: string) {
-    await Promise.all([loadPermits(found, query), loadInvestigations(found, query)])
+  async function loadAllDatasets(addressRecord: AddressRecord, typedAddress: string) {
+    await Promise.all([
+      loadPermits(addressRecord, typedAddress),
+      loadInvestigations(addressRecord, typedAddress),
+      loadViolationCases(addressRecord, typedAddress),
+    ])
   }
 
-  async function loadPermits(found: AddressRecord, query: string) {
+  async function loadPermits(addressRecord: AddressRecord, typedAddress: string) {
     permitsStatus.value = 'loading'
     try {
-      const fetchedPermits = await fetchPermits(found)
-      if (query !== searchedAddress.value) return
+      const fetchedPermits = await fetchPermits(addressRecord)
+      if (typedAddress !== searchedAddress.value) return
       permits.value = fetchedPermits
       permitsStatus.value = 'loaded'
     } catch {
-      if (query !== searchedAddress.value) return
+      if (typedAddress !== searchedAddress.value) return
       permitsStatus.value = 'error'
     }
   }
 
-  async function loadInvestigations(found: AddressRecord, query: string) {
+  async function loadInvestigations(addressRecord: AddressRecord, typedAddress: string) {
     investigationsStatus.value = 'loading'
     try {
-      const fetchedInvestigations = await fetchInvestigations(found)
-      if (query !== searchedAddress.value) return
+      const fetchedInvestigations = await fetchInvestigations(addressRecord)
+      if (typedAddress !== searchedAddress.value) return
       investigations.value = fetchedInvestigations
       investigationsStatus.value = 'loaded'
     } catch {
-      if (query !== searchedAddress.value) return
+      if (typedAddress !== searchedAddress.value) return
       investigationsStatus.value = 'error'
+    }
+  }
+
+  async function loadViolationCases(addressRecord: AddressRecord, typedAddress: string) {
+    violationCasesStatus.value = 'loading'
+    try {
+      const fetchedViolationCases = await fetchViolationCases(addressRecord)
+      if (typedAddress !== searchedAddress.value) return
+      violationCases.value = fetchedViolationCases
+      violationCasesStatus.value = 'loaded'
+    } catch {
+      if (typedAddress !== searchedAddress.value) return
+      violationCasesStatus.value = 'error'
     }
   }
 
@@ -85,6 +109,8 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
     permitsStatus,
     investigations,
     investigationsStatus,
+    violationCases,
+    violationCasesStatus,
     loadProperty,
   }
 })
