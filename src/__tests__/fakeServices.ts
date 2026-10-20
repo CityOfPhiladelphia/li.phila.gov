@@ -154,15 +154,38 @@ export const sampleViolationRows: DatabridgeRow[] = [
   },
 ]
 
+/** What the fake gateway answers for one table: rows, or a 500. */
+type TableAnswer = DatabridgeRow[] | 'fail'
+
+/** Answers per gateway table. A table left out gets its sample rows. */
+export interface TableAnswers {
+  permits?: TableAnswer
+  case_investigations?: TableAnswer
+  violations?: TableAnswer
+}
+
+const sampleAnswers: TableAnswers = {
+  permits: samplePermitRows,
+  case_investigations: sampleInvestigationRows,
+  violations: sampleViolationRows,
+}
+
 /**
- * Pretends both services answer: AIS finds the sample address, and the gateway returns
- * these permit rows. Routes by URL, since both go through fetch.
+ * Pretends both services answer: AIS finds the sample address, and the gateway answers each
+ * table with its sample rows unless told otherwise. Both go through fetch, so this routes by
+ * URL: the AIS path, or the gateway's `table` query parameter.
  */
-export function stubAisFoundAndPermits(permitRows: DatabridgeRow[] = samplePermitRows) {
+export function stubServices(answers: TableAnswers = {}) {
   vi.stubGlobal('fetch', async (url: string) => {
-    const body = url.includes('/ais/')
-      ? { features: [{ properties: sampleAisProperties }] }
-      : gatewayReply(permitRows)
-    return { ok: true, status: 200, json: async () => body }
+    if (url.includes('/ais/')) {
+      const body = { features: [{ properties: sampleAisProperties }] }
+      return { ok: true, status: 200, json: async () => body }
+    }
+    const table = new URL(url).searchParams.get('table') as keyof TableAnswers
+    const answer = answers[table] ?? sampleAnswers[table] ?? []
+    if (answer === 'fail') {
+      return { ok: false, status: 500, json: async () => ({}) }
+    }
+    return { ok: true, status: 200, json: async () => gatewayReply(answer) }
   })
 }

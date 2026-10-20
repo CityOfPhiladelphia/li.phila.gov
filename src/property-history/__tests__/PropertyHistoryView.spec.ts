@@ -4,7 +4,7 @@ import { flushPromises } from '@vue/test-utils'
 import router from '@/router'
 import { mountAt } from '@/__tests__/helpers'
 import { stubAis, stubAisFound } from '@/__tests__/fakeAis'
-import { stubAisFoundAndPermits, samplePermitRows } from '@/__tests__/fakeServices'
+import { stubServices, samplePermitRows } from '@/__tests__/fakeServices'
 
 const searchInput = 'input[placeholder="Search an address..."]'
 
@@ -71,7 +71,7 @@ describe('PropertyHistoryView', () => {
     })
 
     it('list the permits, newest first, with a count', async () => {
-      stubAisFoundAndPermits()
+      stubServices()
       const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
       expect(wrapper.text()).toContain('2 Permits for this property')
@@ -87,7 +87,7 @@ describe('PropertyHistoryView', () => {
     })
 
     it('say there are no permits when the gateway returns none', async () => {
-      stubAisFoundAndPermits([])
+      stubServices({ permits: [] })
       const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
       expect(wrapper.text()).toContain('No Permits for this property')
@@ -95,7 +95,7 @@ describe('PropertyHistoryView', () => {
     })
 
     it('say there is a single unpluralized permit when the gateway returns one', async () => {
-      stubAisFoundAndPermits([samplePermitRows[0]!])
+      stubServices({ permits: [samplePermitRows[0]!] })
       const wrapper = await mountAt('/property-history/search?address=1234 Market St')
       await flushPromises()
       expect(wrapper.text()).toContain('CP-2025-006422')
