@@ -19,11 +19,25 @@ export default defineConfigWithVueTs(
   globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
 
   ...pluginVue.configs['flat/essential'],
-  vueTsConfigs.recommended,
+  vueTsConfigs.recommendedTypeChecked,
 
+  {
+    // router.push and the store's load actions are fire-and-forget by design (the router
+    // and the status refs carry the outcome); marking each call `void` hurts readability
+    name: 'app/promises',
+    files: ['**/*.{vue,ts,mts,tsx}'],
+    rules: { '@typescript-eslint/no-floating-promises': 'off' },
+  },
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
+  },
+  {
+    // the fakes that stand in for fetch use `async` on purpose, as the shortest way to
+    // return a Promise the way fetch and response.json() do; nothing in them awaits
+    name: 'app/test-fakes',
+    files: ['src/**/__tests__/*'],
+    rules: { '@typescript-eslint/require-await': 'off' },
   },
 
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),

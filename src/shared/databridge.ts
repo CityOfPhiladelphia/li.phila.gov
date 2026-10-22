@@ -9,9 +9,12 @@ const PAGE_SIZE = 999
 /** One row from a databridge table: column name → value. Dataset code turns these into its own records. */
 export type DatabridgeRow = Record<string, unknown>
 
-/** Returns a column as text; null and undefined become "". */
+/** Returns a column as text; null and undefined become "", an object becomes its JSON. */
 export function cellText(value: unknown): string {
-  return value == null ? '' : String(value)
+  if (value == null) return ''
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  return JSON.stringify(value)
 }
 
 interface DatabridgeResponse {
