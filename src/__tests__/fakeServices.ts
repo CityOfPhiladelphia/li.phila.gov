@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 import type { DatabridgeRow } from '@/shared/databridge'
 import { sampleAisProperties } from './fakeAis'
-import { gatewayReply } from './fakeGateway'
+import { toGatewayReply } from './fakeGateway'
 
 /** Two real permits for 1234 MARKET ST, RAW as the gateway sends them (bare local timestamps). */
 export const samplePermitRows: DatabridgeRow[] = [
@@ -171,21 +171,61 @@ const sampleAnswers: TableAnswers = {
 }
 
 /**
- * Pretends both services answer: AIS finds the sample address, and the gateway answers each
+ * Returns what AIS answers for this search URL: the sample address, with the street address
+ * echoing what was searched for, so a test can tell one search's record from another's.
+ */
+function buildAisReply(url: string) {
+  const searched = decodeURIComponent(new URL(url).pathname.split('/search/')[1] ?? '')
+  const properties = { ...sampleAisProperties, street_address: searched.toUpperCase() }
+  const body = { features: [{ properties }] }
+  return { ok: true, status: 200, json: async () => body }
+}
+
+/** Returns what the gateway answers for this URL: the table's rows, or a 500. */
+function buildGatewayReply(url: string, answers: TableAnswers) {
+  const table = new URL(url).searchParams.get('table') as keyof TableAnswers
+  const answer = answers[table] ?? sampleAnswers[table] ?? []
+  if (answer === 'fail') {
+    return { ok: false, status: 500, json: async () => ({}) }
+  }
+  return { ok: true, status: 200, json: async () => toGatewayReply(answer) }
+}
+
+/**
+ * Pretends both services answer: AIS finds the searched address, and the gateway answers each
  * table with its sample rows unless told otherwise. Both go through fetch, so this routes by
  * URL: the AIS path, or the gateway's `table` query parameter.
  */
 export function stubServices(answers: TableAnswers = {}) {
   vi.stubGlobal('fetch', async (url: string) => {
-    if (url.includes('/ais/')) {
-      const body = { features: [{ properties: sampleAisProperties }] }
-      return { ok: true, status: 200, json: async () => body }
-    }
-    const table = new URL(url).searchParams.get('table') as keyof TableAnswers
-    const answer = answers[table] ?? sampleAnswers[table] ?? []
-    if (answer === 'fail') {
-      return { ok: false, status: 500, json: async () => ({}) }
-    }
-    return { ok: true, status: 200, json: async () => gatewayReply(answer) }
+    return url.includes('/ais/') ? buildAisReply(url) : buildGatewayReply(url, answers)
   })
+}
+
+/** An AIS search the fake has received but not yet answered; calling respond() answers it. */
+interface HeldSearch {
+  url: string
+  respond: () => void
+}
+
+/**
+ * Like stubServices, but AIS stays silent until the test calls release(address). The gateway
+ * still answers at once. For testing what happens when searches overlap.
+ */
+export function stubServicesHoldingAis() {
+  const held: HeldSearch[] = []
+  vi.stubGlobal('fetch', (url: string) => {
+    if (!url.includes('/ais/')) return Promise.resolve(buildGatewayReply(url, {}))
+    return new Promise((resolve) => {
+      held.push({ url, respond: () => resolve(buildAisReply(url)) })
+    })
+  })
+  return {
+    /** Lets AIS answer the search for this address. */
+    release(address: string) {
+      const search = held.find((h) => h.url.includes(encodeURIComponent(address)))
+      if (!search) throw new Error(`no AIS search is waiting for "${address}"`)
+      search.respond()
+    },
+  }
 }

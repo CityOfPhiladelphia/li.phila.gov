@@ -139,3 +139,7 @@ An **address** is what a lookup service resolves the typed words to: the AIS rep
 ## Records carry L&I's own ids, never the gateway's `objectid` (2026-10-20)
 
 `objectid` is reassigned whenever the gateway refreshes a table: between two loads a week apart every fixture row's `objectid` changed in `permits`, `violations`, and `case_investigations` while the rows themselves did not. It is a row number within one load, not an identifier, and anything built on it (a detail URL, a test looking a row up by id) breaks on the next refresh. So `Permit`, `Violation`, and `Investigation` have no `id`; each carries the key L&I assigns: `permitNumber`, `violationNumber`, and `processId` (`investigationprocessid`, which did survive the refresh — a case has several investigations, so `caseNumber` alone can't name one). `fetchAllRows` still pages on `objectid`, which is fine within a single fetch.
+
+## Functions are named verb-first; values and types are nouns (2026-10-22)
+
+A function does something, so its name starts with what it does: `fetchPermits`, `toViolationCase`, `buildAisReply`, `groupByCase`, `stubServices`. A `const`, a `ref`, a type, or a field is a thing, so it gets a noun: `samplePermitRows`, `violationCases`, `TableAnswers`. Common verbs so far: `fetch` (remote call), `to` (convert this into that), `build` (construct from parts), `load` (store action that fetches and stores), `stub` (replace a global for a test). Companion to the "Returns …" comment rule: the name says what it does, the comment says what you get.

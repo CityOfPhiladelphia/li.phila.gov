@@ -5,7 +5,7 @@ import type { DatabridgeRow } from '@/shared/databridge'
 export type Page = DatabridgeRow[]
 
 /** Shapes rows the way the gateway's reply does: each row wrapped in { properties }. */
-export function gatewayReply(rows: DatabridgeRow[]) {
+export function toGatewayReply(rows: DatabridgeRow[]) {
   return { data: { features: rows.map((row) => ({ properties: row })) } }
 }
 
@@ -20,7 +20,7 @@ export function stubGatewayPages(pages: Page[]) {
     requests.push(url)
     const pageRows = pages[call] ?? []
     call += 1
-    return { ok: true, status: 200, json: async () => gatewayReply(pageRows) }
+    return { ok: true, status: 200, json: async () => toGatewayReply(pageRows) }
   })
   return requests
 }
