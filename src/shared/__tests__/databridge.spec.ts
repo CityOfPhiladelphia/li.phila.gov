@@ -12,8 +12,20 @@ describe('normalizeTimestamps', () => {
     expect(normalizeTimestamps({ when: '2022-01-15T00:00:00' }).when).toBe('2022-01-15T05:00:00Z') // winter
   })
 
-  it('leaves a string that already carries a zone alone', () => {
+  it('respells a labeled UTC reading as Z without shifting it', () => {
     expect(normalizeTimestamps({ when: '2022-06-15T04:00:00Z' }).when).toBe('2022-06-15T04:00:00Z')
+    expect(normalizeTimestamps({ when: '2022-06-15T04:00:00+00:00' }).when).toBe(
+      '2022-06-15T04:00:00Z',
+    ) // PostgREST
+    expect(normalizeTimestamps({ when: '2022-06-15T04:00:00.000Z' }).when).toBe(
+      '2022-06-15T04:00:00Z',
+    ) // Carto
+  })
+
+  it('converts a reading with another offset to UTC', () => {
+    expect(normalizeTimestamps({ when: '2022-06-15T00:00:00-04:00' }).when).toBe(
+      '2022-06-15T04:00:00Z',
+    )
   })
 
   it('leaves everything that is not a timestamp alone', () => {

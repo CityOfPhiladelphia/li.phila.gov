@@ -27,30 +27,46 @@ export interface TableQuery {
   where: string
 }
 
-// databridge writes every timestamp as the PHILADELPHIA clock reading with no time zone,
-// e.g. '2022-06-15T00:00:00' for a permit issued June 15. A bare reading means "whatever
-// zone the reader is in", so it's read as New York time, explicitly, and relabeled as the
-// real instant in UTC ('2022-06-15T04:00:00Z'). From there a Date can be compared and
-// subtracted safely, and formatDate shows it as a Philadelphia date wherever the viewer is.
+// Every timestamp in a record is spelled one way: real UTC ending in 'Z', e.g.
+// '2022-06-15T04:00:00Z' for a permit issued June 15 in Philadelphia. One spelling means
+// the sorts that compare timestamps as text stay correct, and formatDate shows the value as
+// a Philadelphia date wherever the viewer is. The gateway sends two forms:
+//
+// - Labeled, since 2026-10-23: '2022-06-15T04:00:00+00:00' from PostgREST, or '…Z' / '….000Z'
+//   from Carto. Already the right instant; only the spelling changes.
+// - Bare, e.g. '2022-06-15T00:00:00': the Philadelphia clock reading with no zone, which the
+//   gateway sent everywhere before 2026-10-23 and still sends when it fails over to ArcGIS
+//   Online. A bare reading means "whatever zone the reader is in", so it's read as New York
+//   time, explicitly.
 const BARE_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/
+const LABELED_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/
 
 export const PHILADELPHIA = 'America/New_York'
 
+/** Spells an instant as UTC ending in 'Z', without milliseconds when they are zero. */
+function toUtcText(instant: Date): string {
+  return instant.toISOString().replace('.000Z', 'Z')
+}
+
 /** Reads a bare clock reading like "2022-06-15T00:00:00" as Philadelphia time; returns real UTC. */
 function philadelphiaClockToUtc(clock: string): string {
-  return fromZonedTime(clock, PHILADELPHIA).toISOString().replace('.000Z', 'Z')
+  return toUtcText(fromZonedTime(clock, PHILADELPHIA))
 }
 
 /**
- * Returns a copy of the row with every timestamp-looking string relabeled from Philadelphia
- * clock time to real UTC. The row passed in is left untouched.
+ * Returns a copy of the row with every timestamp-looking string spelled as UTC ending in 'Z':
+ * labeled forms are respelled without shifting, bare forms are read as Philadelphia clock
+ * time. The row passed in is left untouched.
  */
 export function normalizeTimestamps(row: DatabridgeRow): DatabridgeRow {
   const normalized: DatabridgeRow = { ...row }
   for (const key of Object.keys(normalized)) {
     const value = normalized[key]
-    if (typeof value === 'string' && BARE_TIMESTAMP.test(value)) {
+    if (typeof value !== 'string') continue
+    if (BARE_TIMESTAMP.test(value)) {
       normalized[key] = philadelphiaClockToUtc(value)
+    } else if (LABELED_TIMESTAMP.test(value)) {
+      normalized[key] = toUtcText(new Date(value))
     }
   }
   return normalized

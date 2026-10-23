@@ -3,7 +3,11 @@ import type { DatabridgeRow } from '@/shared/databridge'
 import { sampleAisProperties } from './fakeAis'
 import { toGatewayReply } from './fakeGateway'
 
-/** Two real permits for 1234 MARKET ST, RAW as the gateway sends them (bare local timestamps). */
+/**
+ * Two real permits for 1234 MARKET ST, RAW as the gateway sent them before 2026-10-23: bare
+ * Philadelphia timestamps, the form it still uses on ArcGIS failover. Kept bare so the fakes
+ * exercise normalizeTimestamps' zone conversion; the gateway's everyday form is now '…+00:00'.
+ */
 export const samplePermitRows: DatabridgeRow[] = [
   {
     objectid: 861683,
