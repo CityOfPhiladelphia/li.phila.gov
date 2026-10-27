@@ -19,7 +19,17 @@ describe('fetchBusinessLicenses', () => {
       type: 'Dumpster License - Private Property',
       businessName: 'SEPTA (US EQUITIES ASSET MGT LLC)',
       opaAccountNumber: '883309050',
+      issuedDate: '2011-01-25T20:17:07Z',
     })
+  })
+
+  it('asks for licenses addressed to the property, by eCLIPSE id, address, parcel, or OPA account', async () => {
+    const requests = stubGatewayPages([sampleBusinessLicenseRows])
+    await fetchBusinessLicenses(sampleAddressRecord)
+    const where = new URL(requests[0]!).searchParams.get('where')
+    expect(where).toContain("addressed_license = 'Yes'")
+    expect(where).toContain("addressobjectid IN ('129832656', '137826423',")
+    expect(where).toContain("opa_account_num IN ('883309050')")
   })
 
   // Runs only where a client id is set (a developer's .env.local), so it stands down in CI.
@@ -31,6 +41,8 @@ describe('fetchBusinessLicenses', () => {
       const licenses = await fetchBusinessLicenses(address!)
       const testLicense = licenses.find((l) => l.licenseNumber === '524068')
       expect(testLicense?.type).toBe('Dumpster License - Private Property')
+      const testLicense2 = licenses.find((l) => l.licenseNumber === '298972')
+      expect(testLicense2?.type).toBe('High Rise')
     },
   )
 })
