@@ -5,6 +5,7 @@ import { fetchPermits, type Permit } from './permits'
 import { fetchInvestigations, type Investigation } from './investigations'
 import { fetchViolationCases, type ViolationCase } from './violations'
 import { fetchAppeals, type Appeal } from './appeals'
+import { fetchBusinessLicenses, type BusinessLicense } from './businessLicenses'
 
 /** The AIS lookup returns one record or nothing, so "nothing" is a state of the search. */
 export type AddressSearchStatus = 'idle' | 'loading' | 'found' | 'not-found' | 'error'
@@ -33,6 +34,9 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
   const appeals = ref<Appeal[]>([])
   const appealsStatus = ref<LoadStatus>('idle')
 
+  const businessLicenses = ref<BusinessLicense[]>([])
+  const businessLicensesStatus = ref<LoadStatus>('idle')
+
   /** Looks up the typed address, then loads everything the app shows for that property. */
   async function loadProperty(typedAddress: string) {
     searchedAddress.value = typedAddress
@@ -46,6 +50,8 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
     violationCasesStatus.value = 'idle'
     appeals.value = []
     appealsStatus.value = 'idle'
+    businessLicenses.value = []
+    businessLicensesStatus.value = 'idle'
 
     try {
       const found = await fetchAddress(typedAddress)
@@ -78,6 +84,13 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
         typedAddress,
       ),
       loadDataset(fetchAppeals, appeals, appealsStatus, addressRecord, typedAddress),
+      loadDataset(
+        fetchBusinessLicenses,
+        businessLicenses,
+        businessLicensesStatus,
+        addressRecord,
+        typedAddress,
+      ),
     ])
   }
 
@@ -111,6 +124,8 @@ export const usePropertyHistoryStore = defineStore('propertyHistory', () => {
     violationCasesStatus,
     appeals,
     appealsStatus,
+    businessLicenses,
+    businessLicensesStatus,
     loadProperty,
   }
 })
