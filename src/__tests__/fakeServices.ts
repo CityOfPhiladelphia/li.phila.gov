@@ -158,6 +158,56 @@ export const sampleViolationRows: DatabridgeRow[] = [
   },
 ]
 
+/**
+ * Two real appeals for 1234 MARKET ST, RAW as the gateway sends them (labeled UTC): the one
+ * zoning-board appeal, and a review-board appeal with a hearing date and a decision.
+ */
+export const sampleAppealRows: DatabridgeRow[] = [
+  {
+    objectid: 4656,
+    appealnumber: '1589',
+    applicationtype: 'RB_ZBA',
+    appealtype: null,
+    appealstatus: 'CLOSED',
+    decision: 'WITHDRAWN',
+    proviso: null,
+    scheduleddate: '2007-06-13T17:00:00+00:00',
+    createddate: '2007-03-26T19:00:00+00:00',
+    completeddate: null,
+    decisiondate: '2007-06-13T04:00:00+00:00',
+    primaryappellant: 'CARL PRIMAVERA, ESQ.',
+    appealgrounds:
+      'PERMIT FOR THE ERECTION OF A NON-ACCESSORY OUTDOOR ADVERTISING SIGN ABOVE THE BOTTOM OF THE 2ND. FLOOR OF AN EXISTING BUILDING.',
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3615',
+    opa_account_num: '883309050',
+    systemofrecord: 'HANSEN',
+  },
+  {
+    objectid: 30881,
+    appealnumber: 'HA-2022-002343',
+    applicationtype: 'L&I Review Board Other',
+    appealtype: 'LIRB-H Tobacco',
+    appealstatus: 'Closed',
+    decision: 'City Affirmed',
+    proviso: 'CITY AFFIRMED FOR LACK OF APPEARANCE',
+    scheduleddate: '2023-02-02T18:15:00+00:00',
+    createddate: '2022-05-25T12:15:41+00:00',
+    completeddate: '2023-02-03T18:26:59+00:00',
+    decisiondate: '2023-02-06T13:16:41+00:00',
+    primaryappellant: 'JIGNESH  PATEL',
+    appealgrounds: 'See Attached\r\n\r\n4th and Market Street SW Corner 19106',
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    opa_account_num: '883309050',
+    systemofrecord: 'ECLIPSE',
+  },
+]
+
 /** What the fake gateway answers for one table: rows, or a 500. */
 type TableAnswer = DatabridgeRow[] | 'fail'
 
@@ -166,12 +216,14 @@ export interface TableAnswers {
   permits?: TableAnswer
   case_investigations?: TableAnswer
   violations?: TableAnswer
+  appeals?: TableAnswer
 }
 
 const sampleAnswers: TableAnswers = {
   permits: samplePermitRows,
   case_investigations: sampleInvestigationRows,
   violations: sampleViolationRows,
+  appeals: sampleAppealRows,
 }
 
 /**
