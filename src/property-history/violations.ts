@@ -1,4 +1,4 @@
-import { cellText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
+import { toText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
 import type { AddressRecord } from '@/shared/ais'
 import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
@@ -40,14 +40,14 @@ export interface ViolationCase {
 
 function toViolation(row: DatabridgeRow): Violation {
   return {
-    violationNumber: cellText(row.violationnumber),
-    code: cellText(row.violationcode),
-    codeTitle: cellText(row.violationcodetitle),
-    date: cellText(row.violationdate),
-    status: cellText(row.violationstatus),
-    resolutionDate: cellText(row.violationresolutiondate),
-    resolutionCode: cellText(row.violationresolutioncode),
-    noticeUrl: cellText(row.publicnov),
+    violationNumber: toText(row.violationnumber),
+    code: toText(row.violationcode),
+    codeTitle: toText(row.violationcodetitle),
+    date: toText(row.violationdate),
+    status: toText(row.violationstatus),
+    resolutionDate: toText(row.violationresolutiondate),
+    resolutionCode: toText(row.violationresolutioncode),
+    noticeUrl: toText(row.publicnov),
   }
 }
 
@@ -58,19 +58,19 @@ function toViolationCase(rows: CaseRows): ViolationCase {
   // A case's rows always include the one that started the bundle.
   const first = rows[0]!
   return {
-    caseNumber: cellText(first.casenumber),
-    type: cellText(first.casetype),
-    status: cellText(first.casestatus),
-    priority: cellText(first.caseprioritydesc),
-    responsibility: cellText(first.caseresponsibility),
-    createdDate: cellText(first.casecreateddate),
-    completedDate: cellText(first.casecompleteddate),
-    mostRecentInvestigation: cellText(first.mostrecentinvestigation),
-    address: cellText(first.address),
-    unitType: cellText(first.unit_type),
-    unitNumber: cellText(first.unit_num),
-    zipCode: cellText(first.zip),
-    opaAccountNumber: cellText(first.opa_account_num),
+    caseNumber: toText(first.casenumber),
+    type: toText(first.casetype),
+    status: toText(first.casestatus),
+    priority: toText(first.caseprioritydesc),
+    responsibility: toText(first.caseresponsibility),
+    createdDate: toText(first.casecreateddate),
+    completedDate: toText(first.casecompleteddate),
+    mostRecentInvestigation: toText(first.mostrecentinvestigation),
+    address: toText(first.address),
+    unitType: toText(first.unit_type),
+    unitNumber: toText(first.unit_num),
+    zipCode: toText(first.zip),
+    opaAccountNumber: toText(first.opa_account_num),
     violations: rows.map(toViolation),
   }
 }
@@ -79,7 +79,7 @@ function toViolationCase(rows: CaseRows): ViolationCase {
 function groupByCase(rows: DatabridgeRow[]): CaseRows[] {
   const groups = new Map<string, CaseRows>()
   for (const row of rows) {
-    const caseNumber = cellText(row.casenumber)
+    const caseNumber = toText(row.casenumber)
     const group = groups.get(caseNumber)
     if (group) {
       group.push(row)

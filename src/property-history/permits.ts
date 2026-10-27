@@ -1,4 +1,4 @@
-import { cellText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
+import { toText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
 import type { AddressRecord } from '@/shared/ais'
 import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
@@ -21,12 +21,12 @@ export interface Permit {
 }
 
 function toPermit(row: DatabridgeRow): Permit {
-  const unitNumber = cellText(row.unit_num)
-  const unitType = cellText(row.unit_type) || 'Unit'
+  const unitNumber = toText(row.unit_num)
+  const unitType = toText(row.unit_type) || 'Unit'
   const contractorAddress = [
-    cellText(row.contractoraddress1),
-    cellText(row.contractoraddress2),
-    [cellText(row.contractorcity), cellText(row.contractorstate), cellText(row.contractorzip)]
+    toText(row.contractoraddress1),
+    toText(row.contractoraddress2),
+    [toText(row.contractorcity), toText(row.contractorstate), toText(row.contractorzip)]
       .join(' ')
       .trim(),
   ]
@@ -34,19 +34,19 @@ function toPermit(row: DatabridgeRow): Permit {
     .join(', ')
 
   return {
-    permitNumber: cellText(row.permitnumber),
-    description: cellText(row.permitdescription),
-    type: cellText(row.permittype),
-    typeOfWork: cellText(row.typeofwork),
-    status: cellText(row.status),
-    issuedDate: cellText(row.permitissuedate),
-    scopeOfWork: cellText(row.approvedscopeofwork),
-    address: cellText(row.address),
+    permitNumber: toText(row.permitnumber),
+    description: toText(row.permitdescription),
+    type: toText(row.permittype),
+    typeOfWork: toText(row.typeofwork),
+    status: toText(row.status),
+    issuedDate: toText(row.permitissuedate),
+    scopeOfWork: toText(row.approvedscopeofwork),
+    address: toText(row.address),
     unit: unitNumber ? `${unitType} ${unitNumber}` : '',
-    zipCode: cellText(row.zip),
-    contractorName: cellText(row.contractorname),
+    zipCode: toText(row.zip),
+    contractorName: toText(row.contractorname),
     contractorAddress,
-    opaAccountNumber: cellText(row.opa_account_num),
+    opaAccountNumber: toText(row.opa_account_num),
   }
 }
 

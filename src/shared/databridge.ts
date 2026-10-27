@@ -10,7 +10,7 @@ const PAGE_SIZE = 999
 export type DatabridgeRow = Record<string, unknown>
 
 /** Returns a column as text; null and undefined become "", an object becomes its JSON. */
-export function cellText(value: unknown): string {
+export function toText(value: unknown): string {
   if (value == null) return ''
   if (typeof value === 'string') return value
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
