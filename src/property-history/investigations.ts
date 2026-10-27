@@ -1,4 +1,4 @@
-import { cellText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
+import { toText, fetchAllRows, type DatabridgeRow } from '@/shared/databridge'
 import type { AddressRecord } from '@/shared/ais'
 import { propertyRecordsWhere } from '@/property-history/propertyRecordsWhere'
 
@@ -23,19 +23,19 @@ export interface Investigation {
 
 function toInvestigation(row: DatabridgeRow): Investigation {
   return {
-    processId: cellText(row.investigationprocessid),
-    caseNumber: cellText(row.casenumber),
-    caseType: cellText(row.casetype),
-    caseResponsibility: cellText(row.caseresponsibility),
-    casePriority: cellText(row.casepriority),
-    type: cellText(row.investigationtype),
-    completed: cellText(row.investigationcompleted),
-    status: cellText(row.investigationstatus),
-    address: cellText(row.address),
-    unitType: cellText(row.unit_type),
-    unitNumber: cellText(row.unit_num),
-    zipCode: cellText(row.zip),
-    opaAccountNumber: cellText(row.opa_account_num),
+    processId: toText(row.investigationprocessid),
+    caseNumber: toText(row.casenumber),
+    caseType: toText(row.casetype),
+    caseResponsibility: toText(row.caseresponsibility),
+    casePriority: toText(row.casepriority),
+    type: toText(row.investigationtype),
+    completed: toText(row.investigationcompleted),
+    status: toText(row.investigationstatus),
+    address: toText(row.address),
+    unitType: toText(row.unit_type),
+    unitNumber: toText(row.unit_num),
+    zipCode: toText(row.zip),
+    opaAccountNumber: toText(row.opa_account_num),
   }
 }
 
