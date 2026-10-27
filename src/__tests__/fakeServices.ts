@@ -208,6 +208,63 @@ export const sampleAppealRows: DatabridgeRow[] = [
   },
 ]
 
+/**
+ * Two real business licenses for 1234 MARKET ST, RAW as the gateway sends them: SEPTA's
+ * High Rise license (inactive) and its dumpster license (active, no expiration). Both are
+ * company licenses; the owner-contact columns, which can hold a private person's home
+ * address, are left out.
+ */
+export const sampleBusinessLicenseRows: DatabridgeRow[] = [
+  {
+    objectid: 57283,
+    addressobjectid: 15495782,
+    addressed_license: 'Yes',
+    licensenum: '298972',
+    revenuecode: '3629',
+    licensetype: 'High Rise',
+    rentalcategory: null,
+    initialissuedate: '2000-11-02T05:00:00+00:00',
+    mostrecentissuedate: '2014-05-15T20:22:09+00:00',
+    expirationdate: '2015-04-30T04:00:00+00:00',
+    inactivedate: '2015-06-29T04:00:00+00:00',
+    licensestatus: 'Inactive',
+    numberofunits: null,
+    legalname: 'SEPTA',
+    legalentitytype: 'Company',
+    business_name: 'SEPTA',
+    business_mailing_address: '1234 MARKET ST PHILADELPHIA, PA  19107 USA',
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    opa_account_num: '883309050',
+  },
+  {
+    objectid: 180506,
+    addressobjectid: 15495782,
+    addressed_license: 'Yes',
+    licensenum: '524068',
+    revenuecode: '3230',
+    licensetype: 'Dumpster License - Private Property',
+    rentalcategory: null,
+    initialissuedate: '2011-01-25T20:17:07+00:00',
+    mostrecentissuedate: '2013-08-13T21:32:27+00:00',
+    expirationdate: null,
+    inactivedate: null,
+    licensestatus: 'Active',
+    numberofunits: null,
+    legalname: 'SEPTA',
+    legalentitytype: null,
+    business_name: 'SEPTA (US EQUITIES ASSET MGT LLC)',
+    business_mailing_address: '1234 MARKET ST MEZZ LEVEL PHILADELPHIA, PA  19107 USA',
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    opa_account_num: '883309050',
+  },
+]
+
 /** What the fake gateway answers for one table: rows, or a 500. */
 type TableAnswer = DatabridgeRow[] | 'fail'
 
@@ -217,6 +274,7 @@ export interface TableAnswers {
   case_investigations?: TableAnswer
   violations?: TableAnswer
   appeals?: TableAnswer
+  business_licenses?: TableAnswer
 }
 
 const sampleAnswers: TableAnswers = {
@@ -224,6 +282,7 @@ const sampleAnswers: TableAnswers = {
   case_investigations: sampleInvestigationRows,
   violations: sampleViolationRows,
   appeals: sampleAppealRows,
+  business_licenses: sampleBusinessLicenseRows,
 }
 
 /**
