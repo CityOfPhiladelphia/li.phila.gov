@@ -265,6 +265,158 @@ export const sampleBusinessLicenseRows: DatabridgeRow[] = [
   },
 ]
 
+/**
+ * Three real building certifications for 1234 MARKET ST, RAW as the gateway sends them (labeled
+ * UTC): one for BIN 1496964, two for BIN 1496963, and none for BIN 1530931. Given out of date
+ * order, so the shaping test proves the sort.
+ */
+export const sampleBuildingCertRows: DatabridgeRow[] = [
+  {
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    buildingcertnumber: 'BC-2023-010701',
+    buildingcerttype: 'Fire Alarm Certification',
+    inspectiondate: '2023-04-26T04:00:00+00:00',
+    inspectionresult: 'Certified',
+    expirationdate: '2024-04-26T04:00:00+00:00',
+    bin: '1496963',
+    contractorname: 'JOHNSON CONTROLS US HOLDINGS INC',
+    contractoraddress:
+      'JOHNSON CONTROLS US HOLDINGS INC\r\n9 ROSZEL ROAD POB 8799\r\nPRINCETON, NJ  08543\r\nUSA',
+    council_district: '1',
+    posse_jobid: '602113878',
+    objectid: 100127,
+  },
+  {
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    buildingcertnumber: 'BC-2024-026422',
+    buildingcerttype: 'Sprinkler Certification',
+    inspectiondate: '2024-08-09T04:00:00+00:00',
+    inspectionresult: 'Certified',
+    expirationdate: '2025-08-09T04:00:00+00:00',
+    bin: '1496964',
+    contractorname: 'ONEIDA FIRE PROTECTION INC',
+    contractoraddress:
+      'ONEIDA FIRE PROTECTION INC\r\n421 N 7TH ST., SUITE 202  \r\nPHILADELPHIA, PA  19123\r\nUSA',
+    council_district: '1',
+    posse_jobid: '795387494',
+    objectid: 15683,
+  },
+  {
+    address: '1234 MARKET ST',
+    unit_type: null,
+    unit_num: null,
+    zip: '19107-3721',
+    buildingcertnumber: 'BC-2023-016499',
+    buildingcerttype: 'Facade Report',
+    inspectiondate: '2023-06-20T04:00:00+00:00',
+    inspectionresult: 'Safe',
+    expirationdate: '2028-06-20T04:00:00+00:00',
+    bin: '1496963',
+    contractorname: "O'DONNELL & NACCARATO INC",
+    contractoraddress:
+      "O'DONNELL & NACCARATO INC\r\n701 MARKET STREET\r\nSUITE 6000\r\nPHILADELPHIA, PA  19106\r\nUSA",
+    council_district: '1',
+    posse_jobid: '631274279',
+    objectid: 70661,
+  },
+]
+
+/**
+ * The three real building certification summaries for 1234 MARKET ST, RAW as the gateway sends
+ * them: one row per BIN, with a status and case-file column for each of the eleven
+ * certification types. BIN 1530931 has four statuses, two of them with case files, and no
+ * cert rows above; BIN 1496963 has three statuses, none with a case file; BIN 1496964 has one.
+ */
+export const sampleBuildingCertSummaryRows: DatabridgeRow[] = [
+  {
+    structure_id: '1496964',
+    id_type: 'BIN',
+    standpipe_status: null,
+    standpipe_casefile: null,
+    fire_alarm_status: null,
+    fire_alarm_casefile: null,
+    smoke_control_status: null,
+    smoke_control_casefile: null,
+    pier_status: null,
+    pier_casefile: null,
+    fire_escape_status: null,
+    fire_escape_casefile: null,
+    private_bridge_status: null,
+    private_bridge_casefile: null,
+    emer_stdby_pwr_sys_status: null,
+    emer_stdby_pwr_sys_casefile: null,
+    special_hazards_status: null,
+    special_hazards_casefile: null,
+    facade_status: null,
+    facade_casefile: null,
+    sprinkler_status: 'Expired',
+    sprinkler_casefile: null,
+    damper_status: null,
+    damper_casefile: null,
+    objectid: 6165,
+  },
+  {
+    structure_id: '1530931',
+    id_type: 'BIN',
+    standpipe_status: null,
+    standpipe_casefile: null,
+    fire_alarm_status: 'Expired',
+    fire_alarm_casefile: 'CF-2026-141276',
+    smoke_control_status: null,
+    smoke_control_casefile: null,
+    pier_status: null,
+    pier_casefile: null,
+    fire_escape_status: null,
+    fire_escape_casefile: null,
+    private_bridge_status: null,
+    private_bridge_casefile: null,
+    emer_stdby_pwr_sys_status: null,
+    emer_stdby_pwr_sys_casefile: null,
+    special_hazards_status: 'Deficient',
+    special_hazards_casefile: 'CF-2026-141191',
+    facade_status: 'Expired',
+    facade_casefile: null,
+    sprinkler_status: 'Expired',
+    sprinkler_casefile: 'CF-2026-141276',
+    damper_status: null,
+    damper_casefile: null,
+    objectid: 18392,
+  },
+  {
+    structure_id: '1496963',
+    id_type: 'BIN',
+    standpipe_status: null,
+    standpipe_casefile: null,
+    fire_alarm_status: 'Expired',
+    fire_alarm_casefile: null,
+    smoke_control_status: null,
+    smoke_control_casefile: null,
+    pier_status: null,
+    pier_casefile: null,
+    fire_escape_status: null,
+    fire_escape_casefile: null,
+    private_bridge_status: null,
+    private_bridge_casefile: null,
+    emer_stdby_pwr_sys_status: null,
+    emer_stdby_pwr_sys_casefile: null,
+    special_hazards_status: 'Active',
+    special_hazards_casefile: null,
+    facade_status: 'Active',
+    facade_casefile: null,
+    sprinkler_status: null,
+    sprinkler_casefile: null,
+    damper_status: null,
+    damper_casefile: null,
+    objectid: 25642,
+  },
+]
+
 /** What the fake gateway answers for one table: rows, or a 500. */
 type TableAnswer = DatabridgeRow[] | 'fail'
 
@@ -275,6 +427,8 @@ export interface TableAnswers {
   violations?: TableAnswer
   appeals?: TableAnswer
   business_licenses?: TableAnswer
+  building_certs?: TableAnswer
+  building_cert_summary?: TableAnswer
 }
 
 const sampleAnswers: TableAnswers = {
@@ -283,6 +437,8 @@ const sampleAnswers: TableAnswers = {
   violations: sampleViolationRows,
   appeals: sampleAppealRows,
   business_licenses: sampleBusinessLicenseRows,
+  building_certs: sampleBuildingCertRows,
+  building_cert_summary: sampleBuildingCertSummaryRows,
 }
 
 /**
