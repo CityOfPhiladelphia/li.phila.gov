@@ -61,6 +61,8 @@ describe('property history store', () => {
     expect(propertyHistoryStore.appeals[0]?.appealNumber).toEqual('HA-2022-002343')
     expect(propertyHistoryStore.businessLicensesStatus).toBe('loaded')
     expect(propertyHistoryStore.businessLicenses[0]?.licenseNumber).toEqual('524068')
+    expect(propertyHistoryStore.buildingsStatus).toBe('loaded')
+    expect(propertyHistoryStore.buildings[0]?.bin).toEqual('1496964')
   })
 
   it('handles a failed dataset load', async () => {
@@ -72,6 +74,7 @@ describe('property history store', () => {
     expect(propertyHistoryStore.investigationsStatus).toBe('loaded')
     expect(propertyHistoryStore.appealsStatus).toBe('loaded')
     expect(propertyHistoryStore.businessLicensesStatus).toBe('loaded')
+    expect(propertyHistoryStore.buildingsStatus).toBe('loaded')
   })
 
   it('resets when a new search is initiated', async () => {
@@ -91,6 +94,8 @@ describe('property history store', () => {
     expect(propertyHistoryStore.appeals).toEqual([])
     expect(propertyHistoryStore.businessLicensesStatus).toBe('idle')
     expect(propertyHistoryStore.businessLicenses).toEqual([])
+    expect(propertyHistoryStore.buildingsStatus).toBe('idle')
+    expect(propertyHistoryStore.buildings).toEqual([])
     await secondSearch
   })
 
